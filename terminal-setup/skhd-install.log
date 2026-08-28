@@ -1,0 +1,28 @@
+[34m==>[0m [1mTapping koekeishiya/formulae[0m
+Cloning into '/opt/homebrew/Library/Taps/koekeishiya/homebrew-formulae'...
+Tapped 3 formulae (15 files, 97.8KB).
+[34m==>[0m [1mTrusted formula koekeishiya/formulae/skhd[0m
+Warning: The following taps are not trusted:
+  nikitabobko/tap
+  oven-sh/bun
+  pear-devs/pear
+
+Homebrew is currently ignoring formulae, casks and commands from these taps because tap trust is required.
+
+Prefer trusting only the specific formulae, casks or commands you need.
+Trust installed formulae from these taps with:
+  brew trust --formula oven-sh/bun/bun
+Trust installed casks from these taps with:
+  brew trust --cask pear-devs/pear/pear-desktop
+Trust other specific commands with:
+  brew trust --command <user>/<tap>/<command>
+Whole-tap trust is broader and includes all current and future formulae,
+casks and commands from the listed taps. Trust whole taps with:
+  brew trust nikitabobko/tap oven-sh/bun pear-devs/pear
+Untap them with:
+  brew untap nikitabobko/tap oven-sh/bun pear-devs/pear
+To disable trust checks:
+  export HOMEBREW_NO_REQUIRE_TAP_TRUST=1
+This is not recommended and will be removed in a later release.
+For more information, see:
+  [4mhttps://docs.brew.sh/Tap-Trust[24m
