@@ -1,0 +1,6 @@
+# ~/.skhdrc
+# Global hotkey: Ctrl+Shift+Escape toggles the kitty quick-access dropdown,
+# mimicking the iTerm2 hotkey window.
+# Running the command again hides it, so this single binding toggles.
+
+ctrl + shift - escape : /opt/homebrew/bin/kitten quick-access-terminal
