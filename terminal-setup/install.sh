@@ -269,11 +269,24 @@ configure_macos_for_aerospace() {
   echo "   (Trackpad gesture change may need a logout/login to fully apply.)"
 }
 
+# ---- Component: Rectangle (with your gap preferences) ---------------
+install_rectangle() {
+  install_cask rectangle "Rectangle (window snapping)"
+  echo "==> Applying Rectangle preferences (10px gap, no top-edge gap)..."
+  defaults write com.knollsoft.Rectangle gapSize -int 10
+  defaults write com.knollsoft.Rectangle skipGapTopEdge -int 1
+  # Restart Rectangle so it picks up the new prefs (if running).
+  osascript -e 'quit app "Rectangle"' 2>/dev/null || true
+  sleep 1
+  open -a Rectangle 2>/dev/null || true
+  echo "   gapSize=10, skipGapTopEdge=1 applied."
+}
+
 # ---- Run selected components ----------------------------------------
 [ "$DO_KITTY"  -eq 1 ] && install_kitty
 [ "$DO_SKHD"   -eq 1 ] && install_skhd
 [ "$DO_AERO"   -eq 1 ] && install_aerospace
-[ "$DO_RECT"   -eq 1 ] && install_cask rectangle       "Rectangle (window snapping)"
+[ "$DO_RECT"   -eq 1 ] && install_rectangle
 [ "$DO_MACCY"  -eq 1 ] && install_cask maccy           "Maccy (clipboard manager)"
 [ "$DO_ICE"    -eq 1 ] && install_cask jordanbaird-ice "Ice (menu bar manager)"
 [ "$DO_LMOUSE" -eq 1 ] && install_cask linearmouse     "LinearMouse"
