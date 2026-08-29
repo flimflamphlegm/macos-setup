@@ -37,8 +37,9 @@ enable-normalization-opposite-orientation-for-nested-containers = true
 default-root-container-layout = 'tiles'
 default-root-container-orientation = 'auto'   # wide screens -> horizontal
 
-# Mouse follows focus lazily (feels natural with keyboard-driven tiling).
-on-focus-changed = ['move-mouse window-lazy-center']
+# Mouse-follows-focus is DISABLED (the cursor no longer jumps to the newly
+# focused window). Re-enable by uncommenting the line below.
+# on-focus-changed = ['move-mouse window-lazy-center']
 
 # Don't let macOS auto-unhide apps — stops hidden windows from fighting
 # AeroSpace's focus events (pairs with the disabled Cmd+H bindings below).
@@ -100,6 +101,12 @@ alt-shift-space = 'layout floating tiling'        # toggle float on focused win
 # --- Resize focused window ---
 alt-minus = 'resize smart -50'
 alt-equal = 'resize smart +50'
+# Snap the focused window to an exact width (the neighbor fills the rest).
+# Widths tuned for the 3360-wide Lenovo: 1/3, 1/2, 2/3.
+# Uses alt+ctrl+1/2/3 so it doesn't clash with alt+1/2/3 (workspaces).
+alt-ctrl-1 = 'resize width 1120'   # ~1/3
+alt-ctrl-2 = 'resize width 1680'   # ~1/2
+alt-ctrl-3 = 'resize width 2240'   # ~2/3
 
 # --- Workspaces (1-9, 0) ---
 alt-1 = 'workspace 1'
