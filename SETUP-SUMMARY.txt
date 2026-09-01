@@ -1,0 +1,245 @@
+================================================================
+ KITTY + QUICK-ACCESS TERMINAL SETUP  —  SUMMARY & REPLICATION
+================================================================
+Platform: macOS (Apple Silicon / Homebrew at /opt/homebrew)
+Created:  2026-08-27
+
+----------------------------------------------------------------
+WHAT THIS SETUP GIVES YOU
+----------------------------------------------------------------
+- kitty terminal styled after the end-4 dotfiles look:
+    * "Fluid" animated cursor (cursor_trail)
+    * Slanted powerline tabs (tab_bar_style slant)
+    * JetBrains Mono Nerd Font w/ ligatures
+    * Transparency + background blur, rounded padding
+    * Monokai palette on a DEEP WARM GREY background (#14150f)
+      with Solarized-esque blue (#268bd2) + teal (#2aa198) accents
+- A Quake-style "quick access" dropdown terminal:
+    * Toggled with a GLOBAL hotkey: Ctrl + Shift + Escape
+    * 30 lines tall, top edge, ~90% opacity (matches old iTerm2
+      hotkey window), no blur, auto-hides on focus loss
+    * Pre-spawns hidden at login so toggling is instant
+- skhd hotkey daemon provides the global Ctrl+Shift+Esc binding
+  (macOS won't let kitty grab a global key on its own).
+- AeroSpace tiling window manager (i3-like) tiles your normal windows
+  into workspaces, while the kitty quick-access dropdown is forced to
+  FLOAT so it stays a Quake-style overlay (never tiled).
+
+----------------------------------------------------------------------
+AEROSPACE (tiling window manager)
+----------------------------------------------------------------------
+- Config: ~/.config/aerospace/aerospace.toml  (TOML, config-version 2)
+- i3-like keybindings (alt = Option key on macOS):
+    Alt + H/J/K/L or arrows      focus window left/down/up/right
+    Alt + Shift + H/J/K/L        move window
+    Alt + 1..9, 0                switch to workspace 1..10
+    Alt + Shift + 1..9, 0        move focused window to workspace
+    Alt + Enter                  open a new kitty window
+    Alt + F                      fullscreen focused window
+    Alt + Shift + Space          toggle float/tile on focused window
+    Alt + - / Alt + =            resize focused window
+    Alt + / , Alt + ,            change split orientation / accordion
+    Alt + Tab                    last workspace (back-and-forth)
+    Alt + Shift + ;              enter "service" mode; then:
+        esc  = reload config & exit mode
+        r    = reset workspace tiling
+        f    = toggle float/tile
+        backspace = close all windows but current
+        q    = close window
+- HOW THE DROPDOWN STAYS FLOATING (important):
+    kitty gives the quick-access panel its OWN app bundle id,
+    "net.kovidgoyal.kitty-quick-access", which is DIFFERENT from normal
+    kitty windows ("net.kovidgoyal.kitty"). The on-window-detected rule
+    at the bottom of aerospace.toml matches that bundle id and forces
+    'layout floating'. Normal kitty windows keep tiling. No window-title
+    tricks are needed.
+- skhd + AeroSpace coexist cleanly: skhd owns the GLOBAL Ctrl+Shift+Esc
+  hotkey; AeroSpace does NOT bind that combo, so there is no conflict.
+
+----------------------------------------------------------------
+FILES IN THIS FOLDER
+----------------------------------------------------------------
+  terminal-setup/
+    SETUP-SUMMARY.txt              <- this file
+    install.sh                     <- run to replicate on a new Mac
+    skhdrc                         -> goes to ~/.skhdrc
+    kitty/
+      kitty.conf                   -> goes to ~/.config/kitty/kitty.conf
+      theme.conf                   -> goes to ~/.config/kitty/theme.conf
+      quick-access-terminal.conf   -> goes to ~/.config/kitty/quick-access-terminal.conf
+    aerospace/
+      aerospace.toml               -> goes to ~/.config/aerospace/aerospace.toml
+
+----------------------------------------------------------------
+QUICK REPLICATION (recommended)
+----------------------------------------------------------------
+1. Copy this whole 'terminal-setup' folder to the new Mac.
+2. In Terminal:  cd terminal-setup && bash install.sh
+3. Grant Accessibility permission (see MANUAL STEP below).
+4. Run:  skhd --start-service   and   open -a AeroSpace
+5. Press Ctrl+Shift+Esc to toggle the dropdown.
+
+----------------------------------------------------------------
+SELECTIVE INSTALL / UNINSTALL (component parameters)
+----------------------------------------------------------------
+Both install.sh and uninstall.sh take optional component names.
+With NO arguments they act on the DEFAULT set (kitty, skhd, aerospace).
+Run  `bash install.sh list`  (or `uninstall.sh list`) to print everything.
+
+DEFAULT components (installed by 'all' / no args):
+    kitty        kitty terminal + JetBrains Mono Nerd Font + dropdown config
+    skhd         global hotkey daemon (Ctrl+Shift+Esc dropdown) + skhdrc
+    aerospace    AeroSpace tiling window manager + config
+
+OPTIONAL components (install ONLY when named explicitly — NOT in 'all'):
+    rectangle    window snapping (non-tiling alternative to AeroSpace)
+    maccy        clipboard manager
+    ice          menu bar manager (Ice)
+    linearmouse  mouse behaviour customiser
+    iterm        iTerm2 terminal emulator
+    pear         Pear Desktop (YouTube Music client)
+    chrome       Google Chrome
+    vscode       Visual Studio Code
+
+macOS TWEAKS applied by the 'aerospace' component (with backup + restore):
+    * Dock set to auto-hide (the "bottom application tab").
+    * "Pinch to show apps" (Launchpad) trackpad gesture DISABLED.
+    * "Shake mouse pointer to locate" (cursor-grows-huge) DISABLED.
+    * System appearance set to Dark mode.
+  Prior values are saved to ~/.config/aerospace/.macos-defaults.bak and
+  restored by  `bash uninstall.sh aerospace`.  (The trackpad gesture change
+  fully applies after logout/login.)
+
+  # List everything the scripts can install / remove
+  bash install.sh list
+  bash uninstall.sh list
+
+  # Install
+  bash install.sh                     # DEFAULT set (kitty+skhd+aerospace)
+  bash install.sh all                 # same as no args
+  bash install.sh kitty               # just kitty + font + dropdown config
+  bash install.sh rectangle maccy     # just these optional apps
+  bash install.sh kitty rectangle     # mix default + optional
+  bash install.sh kitty --no-font     # skip the Nerd Font
+
+  # Uninstall (removes configs; --apps also brew-uninstalls)
+  bash uninstall.sh                   # remove DEFAULT configs (keep brew apps)
+  bash uninstall.sh aerospace         # remove only AeroSpace config
+  bash uninstall.sh --apps kitty      # also brew-uninstall kitty (+ font)
+  bash uninstall.sh --apps rectangle  # brew-uninstall Rectangle (no config)
+  bash uninstall.sh --apps all        # full teardown of the DEFAULT set
+
+Notes:
+  * The 5 OPTIONAL apps have no config of ours — they are pure `brew`
+    casks. uninstall only touches them when you pass --apps.
+  * 'kitty' also installs/removes the JetBrains Mono Nerd Font
+    (skip/keep it with --no-font).
+  * uninstall.sh removes CONFIG FILES by default and leaves Homebrew
+    packages installed. Pass --apps to also brew-uninstall them.
+  * uninstall.sh backs up each config to <file>.bak (skip with --purge).
+  * Rectangle and AeroSpace both manage windows — you usually want only
+    ONE. Rectangle = manual snapping; AeroSpace = automatic tiling.
+
+----------------------------------------------------------------
+MANUAL REPLICATION (step by step)
+----------------------------------------------------------------
+# 1. Install kitty + the Nerd Font
+brew install --cask kitty
+brew install --cask font-jetbrains-mono-nerd-font
+
+# 2. Install skhd (global hotkey daemon)
+#    Try the tap; if the Homebrew build sandbox is blocked in your
+#    environment, build the official skhd from source (fallback).
+brew install koekeishiya/formulae/skhd || {
+  cd /tmp && rm -rf skhd-build
+  git clone --depth 1 https://github.com/koekeishiya/skhd.git skhd-build
+  cd skhd-build && make
+  codesign -fs - ./bin/skhd
+  cp ./bin/skhd /opt/homebrew/bin/skhd && chmod +x /opt/homebrew/bin/skhd
+  cd / && rm -rf /tmp/skhd-build
+}
+
+# 3. Install AeroSpace (tiling window manager)
+brew install --cask nikitabobko/tap/aerospace
+
+# 4. Place config files
+mkdir -p ~/.config/kitty ~/.config/aerospace
+cp kitty/kitty.conf                 ~/.config/kitty/
+cp kitty/theme.conf                 ~/.config/kitty/
+cp kitty/quick-access-terminal.conf ~/.config/kitty/
+cp skhdrc                           ~/.skhdrc
+cp aerospace/aerospace.toml         ~/.config/aerospace/
+
+# 5. Register skhd to run on login
+skhd --install-service
+
+# 6. Grant Accessibility permission (MANUAL — see below), then:
+skhd --start-service
+open -a AeroSpace
+
+----------------------------------------------------------------
+MANUAL STEP YOU MUST DO (cannot be scripted)
+----------------------------------------------------------------
+skhd AND AeroSpace both need macOS Accessibility permission:
+  System Settings -> Privacy & Security -> Accessibility
+    -> click "+" -> add  /opt/homebrew/bin/skhd       -> toggle ON
+    -> click "+" -> add  /Applications/AeroSpace.app   -> toggle ON
+  (also add "kitty" if macOS prompts for it)
+Then:
+  skhd --start-service     (or: skhd --restart-service)
+  open -a AeroSpace
+NOTE: if AeroSpace doesn't respond after granting permission, FULLY
+QUIT it and open it again — macOS only applies the grant on restart.
+
+----------------------------------------------------------------
+DAILY / USEFUL COMMANDS
+----------------------------------------------------------------
+  skhd --start-service     # start + enable autostart on login
+  skhd --restart-service   # reload after editing ~/.skhdrc
+  skhd --stop-service      # stop + disable autostart
+  pgrep -fl skhd           # check if running
+
+  aerospace reload-config              # apply ~/.config/aerospace edits
+  aerospace reload-config --dry-run    # validate config without applying
+  aerospace list-apps                  # show app bundle ids (for rules)
+  aerospace list-windows --all         # windows currently TILED
+
+  In kitty:  Cmd+Shift+,   # reload kitty.conf live
+  Toggle dropdown:         # Ctrl+Shift+Esc (via skhd)
+
+----------------------------------------------------------------
+DAILY / USEFUL COMMANDS
+----------------------------------------------------------------
+  skhd --start-service     # start + enable autostart on login
+  skhd --restart-service   # reload after editing ~/.skhdrc
+  skhd --stop-service      # stop + disable autostart
+  pgrep -fl skhd           # check if running
+
+  In kitty:  Cmd+Shift+,   # reload kitty.conf live
+  Toggle dropdown:         # Ctrl+Shift+Esc (via skhd)
+
+----------------------------------------------------------------
+CUSTOMISING
+----------------------------------------------------------------
+- Colors: edit  ~/.config/kitty/theme.conf  (swap the whole file to
+  reskin). Background is #14150f (deep warm grey). Accent used for
+  the active tab / borders is Monokai cyan #66d9ef.
+- Dropdown height: edit 'lines 30' in quick-access-terminal.conf.
+- Dropdown opacity: edit 'background_opacity 0.90' (lower = more
+  transparent).
+- Cursor trail length: edit 'cursor_trail_decay 0.10 0.40' in
+  kitty.conf (higher = longer trail).
+
+----------------------------------------------------------------
+KNOWN LIMITATIONS (macOS)
+----------------------------------------------------------------
+- The dropdown's fade in/out speed is controlled by macOS, not
+  kitty — it is not configurable. Pre-spawning (start_as_hidden)
+  removes the launch lag, which is the part that felt slow.
+- There is no animated "slide down" for the dropdown, and the
+  dropdown panel is NOT draggable or drag-resizable (it's a docked
+  panel). Size it via 'lines' / 'columns' / 'margin_*' instead.
+- If you see "font not found / falling back to Menlo", it usually
+  means kitty launched before the font finished installing. Fully
+  quit kitty (Cmd+Q) and relaunch.
+================================================================

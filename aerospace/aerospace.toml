@@ -1,0 +1,222 @@
+# ~/.config/aerospace/aerospace.toml
+# AeroSpace tiling window manager — i3-like defaults for macOS.
+# Docs: https://nikitabobko.github.io/AeroSpace/guide
+#
+# Designed to coexist with:
+#   * skhd  -> owns the GLOBAL Ctrl+Shift+Esc hotkey that toggles the
+#              kitty quick-access dropdown. AeroSpace does NOT bind that
+#              combo, so there is no conflict.
+#   * kitty quick-access dropdown -> forced to FLOAT (see on-window-detected
+#              at the bottom) so the tiler never tries to tile the Quake
+#              style panel.
+
+# Start AeroSpace at login (AeroSpace manages this itself).
+start-at-login = true
+
+# Config format version (2 is current; silences the migration warning).
+config-version = 2
+
+
+# Launch these apps when AeroSpace starts (at login). Because they open
+# AFTER AeroSpace is up, the on-window-detected rules below auto-sort each
+# one onto its workspace. (Cisco VPN + Zoom intentionally excluded.)
+after-startup-command = [
+    'exec-and-forget open -a "Google Chrome"',
+    'exec-and-forget open -a "Slack"',
+    'exec-and-forget open -a "kitty"',
+    'exec-and-forget open -a "Visual Studio Code"',
+    'exec-and-forget open -a "YouTube Music"',
+    'exec-and-forget open -a "Microsoft Outlook"',
+]
+
+# Normalizations keep the window tree tidy (i3-like).
+enable-normalization-flatten-containers = true
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+# Default layout for new workspaces.
+default-root-container-layout = 'tiles'
+default-root-container-orientation = 'auto'   # wide screens -> horizontal
+
+# Mouse-follows-focus is DISABLED (the cursor no longer jumps to the newly
+# focused window). Re-enable by uncommenting the line below.
+# on-focus-changed = ['move-mouse window-lazy-center']
+
+# Don't let macOS auto-unhide apps — stops hidden windows from fighting
+# AeroSpace's focus events (pairs with the disabled Cmd+H bindings below).
+automatically-unhide-macos-hidden-apps = false
+
+# ----------------------------------------------------------------------
+#  Gaps between windows and screen edges (tweak to taste)
+# ----------------------------------------------------------------------
+[gaps]
+inner.horizontal = 8
+inner.vertical   = 8
+outer.left       = 8
+outer.right      = 8
+outer.top        = 8
+outer.bottom     = 8
+
+# ----------------------------------------------------------------------
+#  Key bindings  (alt = Option key on macOS)
+#  i3-like: alt for focus/workspace, alt+shift for moving windows.
+# ----------------------------------------------------------------------
+[mode.main.binding]
+
+# --- Disable macOS "hide" shortcuts (so windows don't vanish from the WM) ---
+# Cmd-H (Hide app), Cmd-Alt-H (Hide others), Cmd-Shift-H are swallowed here.
+cmd-h = []
+cmd-alt-h = []
+cmd-shift-h = []
+
+# --- Launchers ---
+# (Open a normal kitty window. The DROPDOWN stays on skhd's Ctrl+Shift+Esc.)
+alt-enter = 'exec-and-forget open -na kitty'
+
+# --- Focus windows (vim keys + arrows) ---
+alt-h = 'focus left'
+alt-j = 'focus down'
+alt-k = 'focus up'
+alt-l = 'focus right'
+alt-left  = 'focus left'
+alt-down  = 'focus down'
+alt-up    = 'focus up'
+alt-right = 'focus right'
+
+# --- Move windows ---
+alt-shift-h = 'move left'
+alt-shift-j = 'move down'
+alt-shift-k = 'move up'
+alt-shift-l = 'move right'
+alt-shift-left  = 'move left'
+alt-shift-down  = 'move down'
+alt-shift-up    = 'move up'
+alt-shift-right = 'move right'
+
+# --- Layout controls ---
+alt-slash = 'layout tiles horizontal vertical'   # toggle split orientation
+alt-comma = 'layout accordion horizontal vertical'
+alt-f     = 'fullscreen'
+alt-shift-space = 'layout floating tiling'        # toggle float on focused win
+
+# --- Pause/resume AeroSpace (fixes Chrome tab-dragging etc.) ---
+# When AeroSpace fights you during a drag (dragging a Chrome tab into another
+# window, resizing native dialogs, etc.), press this to turn tiling OFF, do
+# the drag, then press it again to turn tiling back ON.
+alt-shift-e = 'enable toggle'
+
+# --- Resize focused window ---
+alt-minus = 'resize smart -50'
+alt-equal = 'resize smart +50'
+# Snap the focused window to an exact width (the neighbor fills the rest).
+# Widths tuned for the 3360-wide Lenovo: 1/3, 1/2, 2/3.
+# Uses alt+ctrl+1/2/3 so it doesn't clash with alt+1/2/3 (workspaces).
+alt-ctrl-1 = 'resize width 1120'   # ~1/3
+alt-ctrl-2 = 'resize width 1680'   # ~1/2
+alt-ctrl-3 = 'resize width 2240'   # ~2/3
+
+# --- Workspaces (1-9, 0) ---
+alt-1 = 'workspace 1'
+alt-2 = 'workspace 2'
+alt-3 = 'workspace 3'
+alt-4 = 'workspace 4'
+alt-5 = 'workspace 5'
+alt-6 = 'workspace 6'
+alt-7 = 'workspace 7'
+alt-8 = 'workspace 8'
+alt-9 = 'workspace 9'
+alt-0 = 'workspace 10'
+
+# --- Move focused window to workspace N (and follow it) ---
+alt-shift-1 = 'move-node-to-workspace 1  --focus-follows-window'
+alt-shift-2 = 'move-node-to-workspace 2  --focus-follows-window'
+alt-shift-3 = 'move-node-to-workspace 3  --focus-follows-window'
+alt-shift-4 = 'move-node-to-workspace 4  --focus-follows-window'
+alt-shift-5 = 'move-node-to-workspace 5  --focus-follows-window'
+alt-shift-6 = 'move-node-to-workspace 6  --focus-follows-window'
+alt-shift-7 = 'move-node-to-workspace 7  --focus-follows-window'
+alt-shift-8 = 'move-node-to-workspace 8  --focus-follows-window'
+alt-shift-9 = 'move-node-to-workspace 9  --focus-follows-window'
+alt-shift-0 = 'move-node-to-workspace 10 --focus-follows-window'
+
+# --- Quick workspace switching ---
+alt-tab = 'workspace-back-and-forth'
+
+# --- Move the CURRENT workspace to the next monitor (toggles between your
+#     two monitors). Press again to send it back.
+alt-shift-tab = 'move-workspace-to-monitor --wrap-around next'
+
+# --- Enter "service" mode for less-common actions ---
+alt-shift-semicolon = 'mode service'
+
+# ----------------------------------------------------------------------
+#  Service mode: reload config, reset layout, close, etc.
+#  Enter with alt-shift-;  then press a key.  esc / enter returns.
+# ----------------------------------------------------------------------
+[mode.service.binding]
+esc   = ['reload-config', 'mode main']
+r     = ['flatten-workspace-tree', 'mode main']   # reset tiling
+f     = ['layout floating tiling', 'mode main']   # toggle float
+backspace = ['close-all-windows-but-current', 'mode main']
+q     = ['close', 'mode main']
+
+# Join focused window with a neighbour (build nested containers)
+alt-shift-h = ['join-with left',  'mode main']
+alt-shift-j = ['join-with down',  'mode main']
+alt-shift-k = ['join-with up',    'mode main']
+alt-shift-l = ['join-with right', 'mode main']
+
+# ----------------------------------------------------------------------
+#  Window detection rules
+# ----------------------------------------------------------------------
+
+# --- Auto-assign apps to predetermined workspaces ---
+# Each app opens on its designated workspace automatically.
+#   1=Chrome  2=Slack  3=kitty(normal)  4=VSCode  5=YouTubeMusic
+#   6=Finder  7=Outlook+Cisco  8=Zoom
+[[on-window-detected]]
+if.app-id = 'com.google.Chrome'
+run = 'move-node-to-workspace 1'
+
+[[on-window-detected]]
+if.app-id = 'com.tinyspeck.slackmacgap'
+run = 'move-node-to-workspace 2'
+
+[[on-window-detected]]
+# Normal kitty windows (NOT the quick-access dropdown, which has a
+# different app-id and is floated by the rule below) -> workspace 3.
+if.app-id = 'net.kovidgoyal.kitty'
+run = 'move-node-to-workspace 3'
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.VSCode'
+run = 'move-node-to-workspace 4'
+
+[[on-window-detected]]
+if.app-id = 'com.github.th-ch.youtube-music'
+run = 'move-node-to-workspace 5'
+
+[[on-window-detected]]
+if.app-id = 'com.apple.finder'
+run = 'move-node-to-workspace 6'
+
+[[on-window-detected]]
+if.app-id = 'com.microsoft.Outlook'
+run = 'move-node-to-workspace 7'
+
+[[on-window-detected]]
+if.app-id = 'com.cisco.secureclient.gui'
+run = 'move-node-to-workspace 7'
+
+[[on-window-detected]]
+if.app-id = 'us.zoom.xos'
+run = 'move-node-to-workspace 8'
+
+[[on-window-detected]]
+# FLOAT the kitty quick-access dropdown. kitty gives the Quake-style
+# panel its OWN app bundle id — "net.kovidgoyal.kitty-quick-access" —
+# which is DIFFERENT from normal kitty windows ("net.kovidgoyal.kitty").
+# So we match that bundle id directly (robust, no title tricks needed).
+# Normal kitty windows keep tiling; only the dropdown floats.
+if.app-id = 'net.kovidgoyal.kitty-quick-access'
+run = 'layout floating'
+
