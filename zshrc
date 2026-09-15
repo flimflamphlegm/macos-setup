@@ -44,7 +44,8 @@ PROMPT='
 export PATH="/opt/homebrew/opt/openjdk/bin:$PATH"
 export PATH="$(brew --prefix python)/libexec/bin:$PATH"
 
-alias pihole="ssh pi@raspberrypi.local"
+alias pihole="pi@raspberrypi.local"
+alias macmini="ivan@Ivans-Mac-mini.local"
 
 # Force standard 256color terminal for SSH connections
 alias ssh="TERM=xterm-256color ssh"
