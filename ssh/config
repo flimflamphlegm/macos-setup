@@ -1,0 +1,7 @@
+Host macmini
+    HostName Ivans-Mac-mini.local
+    User ivan
+
+Host pi
+    HostName raspberrypi.local
+    User pi
